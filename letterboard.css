@@ -1,0 +1,51 @@
+.letterBoard-container {
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    height: 60vh;
+    position: absolute;
+    z-index: 9999;    
+}
+
+.letterBoard-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+
+}
+
+.letterBoard-letter {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border: 1px solid black;
+    font-size: 2rem;
+}
+
+.letterBoard-clickTarget {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9998;
+
+}
+
+.letterBoard-letter:hover, .letterBoard-letterHold {
+    background-color: gray;
+    color: white;
+}
+
+.letterBoard-selected {
+    position: absolute !important;
+    top: 10px !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: auto !important;
+    z-index: 9999;
+}
