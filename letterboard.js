@@ -14,13 +14,13 @@ var qwertyLayout = {
         ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '⌫'],
         ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']'],
         ['a', 's', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', ';', '"'],
-        ['⇧', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/'],
+        ['⇧', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '␣'],
     ],
     uppercase: [
         ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '⌫'],
         ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']'],
         ['A', 'S', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', ';', '"'],
-        ['⇧', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?'],
+        ['⇧', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '␣'],
     ]
 };
 var lb_osk;
@@ -85,6 +85,9 @@ function letterboardClicked(event) {
                 selectedKey.classList.toggle('letterBoard-letterHold');
                 letterboardToggleCase();
                 return;
+            case '␣':
+                selected = ' ';
+                break;
             case '⌫':
                 if (lb_osk_target instanceof HTMLInputElement && lb_osk_target.value.length > 0)
                     lb_osk_target.value = lb_osk_target.value.substring(0, lb_osk_target.value.length - 1);
@@ -93,9 +96,9 @@ function letterboardClicked(event) {
                 return;
         }
         if (lb_osk_target instanceof HTMLInputElement)
-            lb_osk_target.value += selectedKey.textContent;
+            lb_osk_target.value += selected;
         else
-            lb_osk_target.textContent += selectedKey.textContent;
+            lb_osk_target.textContent += selected;
     }
 }
 /**
