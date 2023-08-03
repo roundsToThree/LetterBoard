@@ -25,12 +25,13 @@ var qwertyLayout = {
 };
 var lb_osk;
 var lb_osk_target;
+var lb_osk_clickTarget;
 var lb_osk_config;
 var defaultLBConfig = {
     x: 'auto',
     y: 'auto',
     w: '80vw',
-    h: '60vh',
+    h: '70vh',
     layout: qwertyLayout,
     raiseSelected: true,
 };
@@ -62,14 +63,19 @@ function openOSK(element, config) {
     document.body.appendChild(lb_osk);
     var clickTarget = document.createElement('div');
     clickTarget.classList.add('letterBoard-clickTarget');
-    clickTarget.addEventListener('click', function (event) {
-        clickTarget.remove();
-        if (lb_osk != null) {
-            lb_osk.remove();
-            lb_osk_target.classList.remove('letterBoard-selected');
-        }
-    });
+    clickTarget.addEventListener('click', closeOSKEvent);
+    lb_osk_clickTarget = clickTarget;
     document.body.appendChild(clickTarget);
+}
+/**
+ * Closes the On Screen Keyboard
+ */
+function closeOSKEvent() {
+    lb_osk_clickTarget.remove();
+    if (lb_osk != null) {
+        lb_osk.remove();
+        lb_osk_target.classList.remove('letterBoard-selected');
+    }
 }
 /**
  * Fired when the letterboard is clicked to modify the selected field
@@ -94,7 +100,13 @@ function letterboardClicked(event) {
                 else if (lb_osk_target.textContent && lb_osk_target.textContent.length > 0)
                     lb_osk_target.textContent = lb_osk_target.textContent.substring(0, lb_osk_target.textContent.length - 1);
                 return;
+            case 'Complete':
+                closeOSKEvent();
+                return;
         }
+        // Ignore not clicking on any specific letter
+        if (!selectedKey.classList.contains('letterBoard-letter'))
+            return;
         if (lb_osk_target instanceof HTMLInputElement)
             lb_osk_target.value += selected;
         else
@@ -122,6 +134,10 @@ function generateKeyboard() {
         });
         container.appendChild(flex);
     });
+    var ok = document.createElement('span');
+    ok.classList.add('letterBoard-complete');
+    ok.textContent = 'Complete';
+    container.appendChild(ok);
     return container;
 }
 /**
