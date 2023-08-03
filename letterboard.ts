@@ -40,13 +40,14 @@ const qwertyLayout: LetterBoardLayout = {
 
 let lb_osk: HTMLDivElement;
 let lb_osk_target: Element;
+let lb_osk_clickTarget: Element;
 let lb_osk_config: LetterBoardConfig;
 
 const defaultLBConfig = {
     x: 'auto',
     y: 'auto',
     w: '80vw',
-    h: '60vh',
+    h: '70vh',
     layout: qwertyLayout,
     raiseSelected: true,
 };
@@ -86,16 +87,22 @@ function openOSK(element: Element, config: LetterBoardConfig = defaultLBConfig) 
 
     const clickTarget = document.createElement('div');
     clickTarget.classList.add('letterBoard-clickTarget');
-    clickTarget.addEventListener('click', (event: MouseEvent) => {
-        clickTarget.remove();
-        if (lb_osk != null) {
-            lb_osk.remove();
-            lb_osk_target.classList.remove('letterBoard-selected');
-        }
-    });
+    clickTarget.addEventListener('click', closeOSKEvent);
+    lb_osk_clickTarget = clickTarget;
 
     document.body.appendChild(clickTarget);
 
+}
+
+/**
+ * Closes the On Screen Keyboard
+ */
+function closeOSKEvent() {
+    lb_osk_clickTarget.remove();
+    if (lb_osk != null) {
+        lb_osk.remove();
+        lb_osk_target.classList.remove('letterBoard-selected');
+    }
 }
 
 
@@ -125,9 +132,16 @@ function letterboardClicked(event: MouseEvent) {
                     lb_osk_target.value = lb_osk_target.value.substring(0, lb_osk_target.value.length - 1);
                 else if (lb_osk_target.textContent && lb_osk_target.textContent.length > 0)
                     lb_osk_target.textContent = lb_osk_target.textContent.substring(0, lb_osk_target.textContent.length - 1);
+                return;
 
+            case 'Complete':
+                closeOSKEvent();
                 return;
         }
+
+        // Ignore not clicking on any specific letter
+        if (!selectedKey.classList.contains('letterBoard-letter'))
+            return;
 
         if (lb_osk_target instanceof HTMLInputElement)
             lb_osk_target.value += selected;
@@ -161,6 +175,12 @@ function generateKeyboard(): HTMLDivElement {
 
         container.appendChild(flex);
     })
+
+    let ok: HTMLSpanElement = document.createElement('span');
+    ok.classList.add('letterBoard-complete');
+    ok.textContent = 'Complete';
+
+    container.appendChild(ok);
 
     return container;
 
